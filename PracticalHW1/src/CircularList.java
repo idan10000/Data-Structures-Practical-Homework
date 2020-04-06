@@ -1,4 +1,4 @@
-
+import java.util.Arrays;
 
 /**
  * Circular list
@@ -49,7 +49,7 @@ public class CircularList {
             }
             start--;
         } else {
-            for (int j = start + len - 1; j > start + i; j--) {
+            for (int j = start + len - 1; j >= start + i; j--) {
                 arr[(j + 1) % maxLen] = arr[j % maxLen];
             }
         }
@@ -70,7 +70,7 @@ public class CircularList {
             return -1;
 
         if (i > len - i) {
-            for (int j = start + i; j > start + len - 1; j++) {
+            for (int j = start + i; j < start + len - 1; j++) {
                 arr[j % maxLen] = arr[(j+1) % maxLen];
             }
         } else {
@@ -85,6 +85,16 @@ public class CircularList {
         return 0;
     }
 
+
+    @Override
+    public String toString() {
+        return "CircularList{" +
+                "arr=" + Arrays.toString(arr) +
+                ", maxLen=" + maxLen +
+                ", len=" + len +
+                ", start=" + start +
+                '}';
+    }
 }
  
  

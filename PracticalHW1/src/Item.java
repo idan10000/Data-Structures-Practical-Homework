@@ -15,4 +15,16 @@ public class Item{
 	public String getInfo(){
 		return info;
 	}
+
+
+
+
+	@Override
+	public String toString() {
+//		return "Item{" +
+//				"key=" + key +
+//				", info='" + info + '\'' +
+//				'}';
+		return "" + key;
+	}
 }
