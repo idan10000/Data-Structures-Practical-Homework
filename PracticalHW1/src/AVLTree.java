@@ -1,4 +1,3 @@
-import org.jetbrains.annotations.NotNull;
 
 /**
  * AVLTree
@@ -142,7 +141,7 @@ public class AVLTree {
      * postcondition: none
      */
     public int size() {
-        return size();
+        return size;
     }
 
     /**
@@ -311,9 +310,9 @@ public class AVLTree {
             root = y;
         else {
             if (node == node.getParent().getLeft())
-                node.getParent().setLeft(node);
+                node.getParent().setLeft(y);
             else
-                node.getParent().setRight(node);
+                node.getParent().setRight(y);
         }
         y.setLeft(node);
         node.setParent(y);
@@ -330,7 +329,7 @@ public class AVLTree {
 
     private int rotateRR(IAVLNode node, updateNodeInt updater) {
         IAVLNode y = node.getLeft();
-        node.setRight(y.getRight());
+        node.setLeft(y.getRight());
         if (y.getRight() != null)
             y.getRight().setParent(node);
         y.setParent(node.getParent());
@@ -338,9 +337,9 @@ public class AVLTree {
             root = y;
         else {
             if (node == node.getParent().getLeft())
-                node.getParent().setLeft(node);
+                node.getParent().setLeft(y);
             else
-                node.getParent().setRight(node);
+                node.getParent().setRight(y);
         }
         y.setRight(node);
         node.setParent(y);
@@ -367,6 +366,7 @@ public class AVLTree {
         IAVLNode node = searchNodeByKey(k);
         if (node == null)
             return -1;
+        size--;
         return deleteNode(node, this::updateHeight);
 
 
@@ -375,40 +375,59 @@ public class AVLTree {
     protected int deleteNode(IAVLNode node, updateNodeInt updater) {
         IAVLNode parent = node.getParent();
         IAVLNode rotateFrom = null;
-        if (node.getLeft() == null && node.getRight() == null) {
-            if (parent.getRight() == node)
-                parent.setRight(null);
-            else
-                parent.setLeft(null);
-            int counter = 0;
-            rotateFrom = parent;
-            return counter;
-        } else if (node.getRight() != null ^ node.getLeft() != null) {
-            if (node.getRight() != null) {
+        boolean movedLeft = false;
+        if (node.getLeft() == null && node.getRight() == null) { // node has no children
+            if (parent != null) {
                 if (parent.getRight() == node)
-                    parent.setRight(node.getRight());
+                    parent.setRight(null);
                 else
-                    parent.setLeft(node.getRight());
-                node.getRight().setParent(parent);
+                    parent.setLeft(null);
+                rotateFrom = parent;
             } else {
-                if (parent.getRight() == node)
-                    parent.setRight(node.getLeft());
-                else
-                    parent.setLeft(node.getLeft());
-                node.getLeft().setParent(parent);
+                root = null;
+                return 0;
             }
-            rotateFrom = parent;
-        } else {
+        } else if (node.getRight() != null ^ node.getLeft() != null) { //node has one child
+            if (parent != null) {
+                if (node.getRight() != null) {
+                    if (parent.getRight() == node)
+                        parent.setRight(node.getRight());
+                    else
+                        parent.setLeft(node.getRight());
+                    node.getRight().setParent(parent);
+                } else {
+                    if (parent.getRight() == node)
+                        parent.setRight(node.getLeft());
+                    else
+                        parent.setLeft(node.getLeft());
+                    node.getLeft().setParent(parent);
+                }
+                rotateFrom = parent;
+            } else {
+                if (node.getRight() != null)
+                    root = node.getRight();
+                else
+                    root = node.getLeft();
+                root.setParent(null);
+                return 0;
+            }
+        } else { //node has 2 children
             IAVLNode runningNode = node.getRight();
-            while (runningNode.getLeft() != null)
+            if (runningNode.getLeft() != null)
+                movedLeft = true;
+            while (runningNode.getLeft() != null) // finding successor when node has 2
                 runningNode = runningNode.getLeft();
             IAVLNode temp = runningNode.getParent();
-            temp.setLeft(runningNode.getRight());
+            temp.setRight(runningNode.getRight());
+            if (runningNode.getRight() != null)
+                runningNode.getRight().setLeft(temp);
             runningNode.setRight(node.getRight());
             runningNode.setLeft(node.getLeft());
             runningNode.setParent(node.getParent());
-            node.getRight().setParent(runningNode);
-            node.getLeft().setParent(runningNode);
+            if (node.getRight() != null)
+                node.getRight().setParent(runningNode);
+            if (node.getLeft() != null)
+                node.getLeft().setParent(runningNode);
             if (node.getParent() == null)
                 root = runningNode;
             else {
@@ -417,7 +436,10 @@ public class AVLTree {
                 else
                     node.getParent().setLeft(runningNode);
             }
-            rotateFrom = temp;
+            if (movedLeft)
+                rotateFrom = temp;
+            else
+                rotateFrom = runningNode;
         }
         int counter = 0;
         while (rotateFrom != null) {
@@ -432,7 +454,6 @@ public class AVLTree {
             }
             rotateFrom = parent;
         }
-        size--;
         return counter;
     }
 
