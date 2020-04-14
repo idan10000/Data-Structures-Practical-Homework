@@ -1,3 +1,5 @@
+import org.jetbrains.annotations.NotNull;
+
 /**
  * AVLTree
  * <p>
@@ -7,8 +9,8 @@
 
 public class AVLTree {
 
-    private IAVLNode root;
-    private int size;
+    protected IAVLNode root;
+    protected int size;
 
     /**
      * public boolean empty()
@@ -98,7 +100,7 @@ public class AVLTree {
         return arr;
     }
 
-    private int InOrderKeyToArrayRec(IAVLNode node, int[] arr, int i) {
+    protected int InOrderKeyToArrayRec(IAVLNode node, int[] arr, int i) {
         if (node != null) {
             int j = InOrderKeyToArrayRec(node.getLeft(), arr, i);
             arr[i + j] = node.getKey();
@@ -166,27 +168,35 @@ public class AVLTree {
      */
     public int insert(int k, String i) {
         IAVLNode nodeToAdd = new AVLNode(k, i);
-        int rotations = 0;
         boolean inserted = baseInsert(nodeToAdd);
         if (!inserted)
             return -1;
-        IAVLNode parent = nodeToAdd.getParent();
-        IAVLNode heightRemained = updateHeightsOnPath(parent); // the node which is the stopping point of all the nodes which changed their height
+        size++;
+        return fixTreeInsert(nodeToAdd, this::updateHeight);
+
+    }
+
+    protected int fixTreeInsert(IAVLNode node, updateNodeInt updater) {
+        IAVLNode parent = node.getParent();
+        int rotations = 0;
         while (parent != null) {
             int BF = computeBF(parent);
-            if (Math.abs(BF) < 2 && parent != heightRemained)
+            boolean changed = updater.update(parent);
+            if (Math.abs(BF) < 2 && !changed)
                 break;
-            else if (Math.abs(BF) < 2 && parent == heightRemained) {
+            else if (Math.abs(BF) < 2) {
                 parent = parent.getParent();
                 continue;
             } else {
-                rotations = doRotation(parent, BF);
+                rotations = doRotation(parent, BF, this::updateHeight);
                 break;
             }
         }
-        size++;
+        while (parent != null) {
+            updater.update(parent);
+            parent = parent.getParent();
+        }
         return rotations;
-
     }
 
     /**
@@ -243,7 +253,7 @@ public class AVLTree {
      *
      * @return true if height changed, false otherwise.
      */
-    public boolean updateHeight(IAVLNode node) { //support function
+    protected boolean updateHeight(IAVLNode node) { //support function
         int leftHeight = -1, rightHeight = -1;
         if (node.getLeft() != null)
             leftHeight = node.getLeft().getHeight();
@@ -265,7 +275,7 @@ public class AVLTree {
      *
      * @return
      */
-    private int computeBF(IAVLNode node) {
+    protected int computeBF(IAVLNode node) {
         int leftHeight = -1, rightHeight = -1;
         if (node.getLeft() != null)
             leftHeight = node.getLeft().getHeight();
@@ -276,22 +286,22 @@ public class AVLTree {
 
     }
 
-    private int doRotation(IAVLNode node, int BF) {
+    protected int doRotation(IAVLNode node, int BF, updateNodeInt updater) {
         if (BF == 2)
             if (computeBF(node.getLeft()) == -1)
-                return rotateLR(node);
+                return rotateLR(node, updater);
             else
-                return rotateRR(node);
+                return rotateRR(node, updater);
         else {
             if (computeBF(node.getRight()) == 1)
-                return rotateRL(node);
+                return rotateRL(node, updater);
             else
-                return rotateLL(node);
+                return rotateLL(node, updater);
         }
 
     }
 
-    private int rotateLL(IAVLNode node) {
+    private int rotateLL(IAVLNode node, updateNodeInt updater) {
         IAVLNode y = node.getRight();
         node.setRight(y.getLeft());
         if (y.getLeft() != null)
@@ -307,18 +317,18 @@ public class AVLTree {
         }
         y.setLeft(node);
         node.setParent(y);
-        updateHeight(node);
-        updateHeight(y);
+        updater.update(node);
+        updater.update(y);
         return 1;
     }
 
-    private int rotateLR(IAVLNode node) {
-        rotateLL(node.getLeft());
-        rotateRR(node);
+    private int rotateLR(IAVLNode node, updateNodeInt updater) {
+        rotateLL(node.getLeft(), updater);
+        rotateRR(node, updater);
         return 2;
     }
 
-    private int rotateRR(IAVLNode node) {
+    private int rotateRR(IAVLNode node, updateNodeInt updater) {
         IAVLNode y = node.getLeft();
         node.setRight(y.getRight());
         if (y.getRight() != null)
@@ -334,14 +344,14 @@ public class AVLTree {
         }
         y.setRight(node);
         node.setParent(y);
-        updateHeight(node);
-        updateHeight(y);
+        updater.update(node);
+        updater.update(y);
         return 1;
     }
 
-    private int rotateRL(IAVLNode node) {
-        rotateRR(node.getRight());
-        rotateLL(node);
+    private int rotateRL(IAVLNode node, updateNodeInt updater) {
+        rotateRR(node.getRight(), updater);
+        rotateLL(node, updater);
         return 2;
     }
 
@@ -357,12 +367,12 @@ public class AVLTree {
         IAVLNode node = searchNodeByKey(k);
         if (node == null)
             return -1;
-        return deleteNode(node);
+        return deleteNode(node, this::updateHeight);
 
 
     }
 
-    private int deleteNode(IAVLNode node) {
+    protected int deleteNode(IAVLNode node, updateNodeInt updater) {
         IAVLNode parent = node.getParent();
         IAVLNode rotateFrom = null;
         if (node.getLeft() == null && node.getRight() == null) {
@@ -411,17 +421,18 @@ public class AVLTree {
         }
         int counter = 0;
         while (rotateFrom != null) {
-            boolean changed = updateHeight(rotateFrom);
+            boolean changed = updater.update(rotateFrom);
             int BF = computeBF(rotateFrom);
             parent = rotateFrom.getParent();
             if (Math.abs(BF) < 2 && !changed)
                 return counter;
 
             if (Math.abs(BF) >= 2) {
-                counter += doRotation(rotateFrom, BF); // rotate
+                counter += doRotation(rotateFrom, BF, updater); // rotate
             }
             rotateFrom = parent;
         }
+        size--;
         return counter;
     }
 
@@ -515,9 +526,144 @@ public class AVLTree {
 
     }
 
+    public class RankTreeNode extends AVLNode {
+        private int size;
+
+        public RankTreeNode(int key, String value) {
+            super(key, value);
+            size = 1;
+        }
+
+        public int getSize() {
+            return size;
+        }
+
+        public void setSize(int size) {
+            this.size = size;
+        }
+
+        public void addNode() {
+            size++;
+        }
+    }
 
 
 }
+
+interface updateNodeInt {
+    public boolean update(AVLTree.IAVLNode node);
+}
+
+class RankTreeList extends AVLTree {
+
+    public int insert(int i, int k, String s) {
+        IAVLNode nodeToAdd = new RankTreeNode(k, s);
+        boolean inserted = baseInsert(nodeToAdd, i);
+        if (!inserted)
+            return -1;
+        size++;
+//       return fixTreeInsert(nodeToAdd, this::updateSizeAndHeight);
+        fixTreeInsert(nodeToAdd, this::updateSizeAndHeight);
+        return 0;
+    }
+
+    protected boolean baseInsert(IAVLNode nodeToAdd, int i) {
+        if (i < 0 || i > size)
+            return false;
+        if (size == 0) {
+            this.root = nodeToAdd;
+            return true;
+        }
+        if (i == size) {
+            IAVLNode runningNode = root;
+            while (runningNode.getRight() != null)
+                runningNode = runningNode.getRight();
+            runningNode.setRight(nodeToAdd);
+            nodeToAdd.setParent(runningNode);
+            return true;
+        } else {
+            IAVLNode successor = select(i + 1);
+            if (successor.getLeft() != null) {
+                successor.setLeft(nodeToAdd);
+                nodeToAdd.setParent(successor);
+            } else {
+                IAVLNode runningNode = successor.getLeft();
+                while (runningNode.getRight() != null)
+                    runningNode = runningNode.getRight();
+                runningNode.setRight(nodeToAdd);
+                nodeToAdd.setParent(runningNode);
+            }
+        }
+        return true;
+    }
+
+    private IAVLNode select(int k) {
+        if (k > size || k < 1)
+            return null;
+        return selectRec(root, k);
+    }
+
+    private IAVLNode selectRec(IAVLNode node, int k) {
+        int rank = 1;
+        if (node.getLeft() != null)
+            rank = ((RankTreeNode) node.getLeft()).getSize() + 1;
+        if (k == rank)
+            return node;
+        else if (k < rank)
+            return selectRec(node.getLeft(), k);
+        else
+            return selectRec(node.getLeft(), k);
+    }
+
+    private int getRank(IAVLNode node, int k) {
+        int rank = 1;
+        if (node.getLeft() != null)
+            rank = ((RankTreeNode) node.getLeft()).getSize() + 1;
+        IAVLNode runningNode = node;
+        while (runningNode != null) {
+            if (runningNode.getParent() != null)
+                if (runningNode == runningNode.getParent().getRight()) {
+                    if (runningNode.getParent().getLeft() != null)
+                        rank += ((RankTreeNode) runningNode.getParent().getLeft()).getSize() + 1;
+                    else
+                        rank++;
+                }
+            runningNode = runningNode.getParent();
+        }
+        return rank;
+    }
+
+    public Item retrieve(int i) {
+        IAVLNode node = select(i + 1);
+        return new Item(node.getKey(), node.getValue());
+    }
+
+    @Override
+    public int delete(int i) {
+        IAVLNode nodeToDelete = select(i + 1);
+        if (nodeToDelete == null)
+            return -1;
+        size--;
+//        return deleteNode(nodeToDelete, this::updateSizeAndHeight);
+        deleteNode(nodeToDelete, this::updateSizeAndHeight);
+        return 0;
+    }
+
+    private boolean updateSizeAndHeight(IAVLNode node) {
+        int leftSize = 0, rightSize = 0;
+        RankTreeNode leftNode = (RankTreeNode) node.getLeft();
+        RankTreeNode rightNode = (RankTreeNode) node.getRight();
+        if (node.getLeft() != null)
+            leftSize = leftNode.getSize();
+        if (node.getRight() != null)
+            rightSize = rightNode.getSize();
+        ((RankTreeNode) node).setSize(leftSize + rightSize + 1);
+
+        return updateHeight(node);
+    }
+}
+
+
 
 
 
