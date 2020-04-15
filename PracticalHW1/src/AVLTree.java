@@ -417,10 +417,19 @@ public class AVLTree {
                 movedLeft = true;
             while (runningNode.getLeft() != null) // finding successor when node has 2
                 runningNode = runningNode.getLeft();
-            IAVLNode temp = runningNode.getParent();
-            temp.setRight(runningNode.getRight());
-            if (runningNode.getRight() != null)
-                runningNode.getRight().setLeft(temp);
+            if (movedLeft) {
+                IAVLNode temp = runningNode.getParent();
+                temp.setLeft(runningNode.getRight());
+                if (runningNode.getRight() != null)
+                    runningNode.getRight().setParent(temp);
+                rotateFrom = temp;
+
+            } else {
+                node.setRight(runningNode.getRight());
+                if (runningNode.getRight() != null)
+                    runningNode.getRight().setParent(node);
+                rotateFrom = runningNode;
+            }
             runningNode.setRight(node.getRight());
             runningNode.setLeft(node.getLeft());
             runningNode.setParent(node.getParent());
@@ -436,18 +445,15 @@ public class AVLTree {
                 else
                     node.getParent().setLeft(runningNode);
             }
-            if (movedLeft)
-                rotateFrom = temp;
-            else
-                rotateFrom = runningNode;
+
         }
         int counter = 0;
         while (rotateFrom != null) {
             boolean changed = updater.update(rotateFrom);
             int BF = computeBF(rotateFrom);
             parent = rotateFrom.getParent();
-            if (Math.abs(BF) < 2 && !changed)
-                return counter;
+//            if (Math.abs(BF) < 2 && !changed)
+//                return counter;
 
             if (Math.abs(BF) >= 2) {
                 counter += doRotation(rotateFrom, BF, updater); // rotate
@@ -456,6 +462,24 @@ public class AVLTree {
         }
         return counter;
     }
+
+//---------------------------------------DELETE THIS-----------------------------------------
+    public void checkHeights() {
+        checkHeightsRec(root);
+    }
+
+    private int checkHeightsRec(IAVLNode node) {
+        if (node == null)
+            return -1;
+        int leftHeight = checkHeightsRec(node.getLeft());
+        int rightHeight = checkHeightsRec(node.getRight());
+        int max = Math.max(leftHeight, rightHeight) + 1;
+        if (max == node.getHeight())
+            return max;
+        else
+            return node.getKey();
+    }
+//---------------------------------------DELETE THIS-----------------------------------------
 
     /**
      * public interface IAVLNode
