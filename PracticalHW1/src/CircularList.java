@@ -47,7 +47,7 @@ public class CircularList {
             for (int j = start; j < start + i; j++) {
                 arr[(j - 1) % maxLen] = arr[j % maxLen];
             }
-            start--;
+            start = (maxLen + start - 1) % maxLen;
         } else {
             for (int j = start + len - 1; j >= start + i; j--) {
                 arr[(j + 1) % maxLen] = arr[j % maxLen];

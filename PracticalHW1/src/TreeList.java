@@ -1,3 +1,4 @@
+import java.util.Arrays;
 
 /**
  * Tree list
@@ -8,6 +9,10 @@ public class TreeList {
 
     private RankTreeList tree;
 
+    public TreeList(){
+        tree = new RankTreeList();
+    }
+
     /**
      * public Item retrieve(int i)
      * <p>
@@ -15,7 +20,7 @@ public class TreeList {
      * otherwise, returns null
      */
     public Item retrieve(int i) {
-        return tree.retrieve(i);  // to be replaced by student code
+        return tree.retrieve(i);
     }
 
     /**
@@ -25,7 +30,7 @@ public class TreeList {
      * returns -1 if i<0 or i>n otherwise return 0.
      */
     public int insert(int i, int k, String s) {
-        return tree.insert(i,k,s);    // to be replaced by student code
+        return tree.insert(i, k, s);
     }
 
     /**
@@ -35,7 +40,11 @@ public class TreeList {
      * returns -1 if i<0 or i>n-1 otherwise returns 0.
      */
     public int delete(int i) {
-        return tree.delete(i);    // to be replaced by student code
+        return tree.delete(i);
+    }
+
+    public void printList(){
+        System.out.println(Arrays.toString(tree.keysToArray()));
     }
 
 }

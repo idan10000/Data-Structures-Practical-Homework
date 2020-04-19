@@ -8,7 +8,7 @@
 
 public class AVLTree {
 
-    protected IAVLNode root;
+    protected IAVLNode root, min, max;
     protected int size;
 
     /**
@@ -60,14 +60,10 @@ public class AVLTree {
      * or null if the tree is empty
      */
     public String min() {
-        if (root == null)
+        if (min == null)
             return null;
-        IAVLNode node = root;
-
-        while (node.getLeft() != null) {
-            node = node.getLeft();
-        }
-        return node.getValue();
+        else
+            return min.getValue();
     }
 
     /**
@@ -77,14 +73,10 @@ public class AVLTree {
      * or null if the tree is empty
      */
     public String max() {
-        if (root == null)
+        if (max == null)
             return null;
-        IAVLNode node = root;
-
-        while (node.getRight() != null) {
-            node = node.getRight();
-        }
-        return node.getValue();
+        else
+            return max.getValue();
     }
 
     /**
@@ -175,7 +167,7 @@ public class AVLTree {
 
     }
 
-    protected int fixTreeInsert(IAVLNode node, updateNodeInt updater) {
+    protected int fixTreeInsert(IAVLNode node, updateNodeInterface updater) {
         IAVLNode parent = node.getParent();
         int rotations = 0;
         while (parent != null) {
@@ -208,6 +200,12 @@ public class AVLTree {
     private boolean baseInsert(IAVLNode nodeToAdd) { // Support function
         IAVLNode backNode = null, frontNode = root;
 
+        //updating max and min
+        if (max == null || max.getKey() < nodeToAdd.getKey())
+            max = nodeToAdd;
+        if (min == null || min.getKey() > nodeToAdd.getKey())
+            min = nodeToAdd;
+
         // Inserting the node
         while (frontNode != null) {
             if (frontNode.getKey() == nodeToAdd.getKey())
@@ -225,6 +223,8 @@ public class AVLTree {
             backNode.setLeft(nodeToAdd);
         else
             backNode.setRight(nodeToAdd);
+
+
         return true;
     }
 
@@ -244,9 +244,13 @@ public class AVLTree {
     }
 
     /**
+     * <p>
      * Updates the height of a AVLNode.
      * If node is a leaf, will set its height to 0. otherwise:
      * Height = max{leftHeight,rightHeight} where leftHeight is the height of the left child, and right is the height of the right child
+     * This function is mainly used as the {@link updateNodeInterface#update(IAVLNode)} function in the functional interface.
+     * </p>
+     * Time Complexity: O(1)
      *
      * @param node the node which's height is being updated
      *
@@ -285,7 +289,22 @@ public class AVLTree {
 
     }
 
-    protected int doRotation(IAVLNode node, int BF, updateNodeInt updater) {
+    /**
+     * <p>
+     * A method which controls which rotation is done to the node according to it's BF, and its corresponding son's BF. {@link #computeBF(IAVLNode)}
+     * The algorithm works as learnt in class:
+     * if node.BF = 2 -> if(node.left.BF = -1) do {@link #rotateLR(IAVLNode, updateNodeInterface)} else do {@link #rotateRR(IAVLNode, updateNodeInterface)}
+     * if node.BF = -2 -> if(node.right.BF = 1) do {@link #rotateRL(IAVLNode, updateNodeInterface)} else do {@link #rotateLL(IAVLNode, updateNodeInterface)}
+     * </p>
+     * Time complexity: O(1)
+     *
+     * @param node    the BF criminal
+     * @param BF      the Beneficial factor of the node (node.left.height - node.right.height)
+     * @param updater a functional interface which updates the parameters of the node after the rotation
+     *
+     * @return the number of rotations done
+     */
+    protected int doRotation(IAVLNode node, int BF, updateNodeInterface updater) {
         if (BF == 2)
             if (computeBF(node.getLeft()) == -1)
                 return rotateLR(node, updater);
@@ -300,7 +319,19 @@ public class AVLTree {
 
     }
 
-    private int rotateLL(IAVLNode node, updateNodeInt updater) {
+    /**
+     * <p>
+     * The algorithm for a left rotation.
+     * At the end of the method updates the corresponding nodes parameters using the {@link updateNodeInterface#update(IAVLNode)}
+     * </p>
+     * Time complexity: O(1)
+     *
+     * @param node    The BF criminal which is being fixed
+     * @param updater the functional interface which updates the node parameters
+     *
+     * @return 1, the amount of rotations done
+     */
+    private int rotateLL(IAVLNode node, updateNodeInterface updater) {
         IAVLNode y = node.getRight();
         node.setRight(y.getLeft());
         if (y.getLeft() != null)
@@ -318,16 +349,39 @@ public class AVLTree {
         node.setParent(y);
         updater.update(node);
         updater.update(y);
-        return 1;
+        return -1;
     }
 
-    private int rotateLR(IAVLNode node, updateNodeInt updater) {
+    /**
+     * <p>
+     * Calls {@link #rotateLL(IAVLNode, updateNodeInterface)} on node.left
+     * Then calls {@link #rotateRR(IAVLNode, updateNodeInterface)} on node
+     * </p>
+     *
+     * @param node    the BF criminal
+     * @param updater the functional interface which updates the node parameters
+     *
+     * @return 2, the amount of rotations done.
+     */
+    private int rotateLR(IAVLNode node, updateNodeInterface updater) {
         rotateLL(node.getLeft(), updater);
         rotateRR(node, updater);
-        return 2;
+        return 3;
     }
 
-    private int rotateRR(IAVLNode node, updateNodeInt updater) {
+    /**
+     * <p>
+     * The algorithm for a right rotation as tought in class.
+     * At the end of the method updates the corresponding nodes parameters using the {@link updateNodeInterface#update(IAVLNode)}
+     * </p>
+     * Time complexity: O(1)
+     *
+     * @param node    The BF criminal which is being fixed
+     * @param updater the functional interface which updates the node parameters
+     *
+     * @return 1, the amount of rotations done
+     */
+    private int rotateRR(IAVLNode node, updateNodeInterface updater) {
         IAVLNode y = node.getLeft();
         node.setLeft(y.getRight());
         if (y.getRight() != null)
@@ -348,10 +402,10 @@ public class AVLTree {
         return 1;
     }
 
-    private int rotateRL(IAVLNode node, updateNodeInt updater) {
+    private int rotateRL(IAVLNode node, updateNodeInterface updater) {
         rotateRR(node.getRight(), updater);
         rotateLL(node, updater);
-        return 2;
+        return 3;
     }
 
     /**
@@ -366,13 +420,36 @@ public class AVLTree {
         IAVLNode node = searchNodeByKey(k);
         if (node == null)
             return -1;
+
+        //updating max and min
+        if (node == max)
+            if (node.getLeft() == null)
+                max = node.getParent();
+            else {
+                IAVLNode runningNode = max.getLeft();
+                while (runningNode.getRight() != null)
+                    runningNode = runningNode.getRight();
+                max = runningNode;
+            }
+        if (node == min)
+            if (node.getRight() == null)
+                min = node.getParent();
+            else {
+                IAVLNode runningNode = min.getRight();
+                while (runningNode.getLeft() != null)
+                    runningNode = runningNode.getLeft();
+                min = runningNode;
+            }
+
+
         size--;
         return deleteNode(node, this::updateHeight);
 
 
     }
 
-    protected int deleteNode(IAVLNode node, updateNodeInt updater) {
+
+    protected int deleteNode(IAVLNode node, updateNodeInterface updater) {
         IAVLNode parent = node.getParent();
         IAVLNode rotateFrom = null;
         boolean movedLeft = false;
@@ -445,15 +522,20 @@ public class AVLTree {
                 else
                     node.getParent().setLeft(runningNode);
             }
+            //replaces the height and size (if it's a RankTreeNode) of runningNode to be those of node
+            runningNode.setHeight(node.getHeight());
+            if (runningNode instanceof RankTreeNode)
+                ((RankTreeNode) runningNode).setSize(((RankTreeNode) node).getSize());
 
         }
+        //Rebalances the tree
         int counter = 0;
         while (rotateFrom != null) {
             boolean changed = updater.update(rotateFrom);
             int BF = computeBF(rotateFrom);
             parent = rotateFrom.getParent();
-//            if (Math.abs(BF) < 2 && !changed)
-//                return counter;
+            if (Math.abs(BF) < 2 && !changed)
+                return counter;
 
             if (Math.abs(BF) >= 2) {
                 counter += doRotation(rotateFrom, BF, updater); // rotate
@@ -462,24 +544,6 @@ public class AVLTree {
         }
         return counter;
     }
-
-//---------------------------------------DELETE THIS-----------------------------------------
-    public void checkHeights() {
-        checkHeightsRec(root);
-    }
-
-    private int checkHeightsRec(IAVLNode node) {
-        if (node == null)
-            return -1;
-        int leftHeight = checkHeightsRec(node.getLeft());
-        int rightHeight = checkHeightsRec(node.getRight());
-        int max = Math.max(leftHeight, rightHeight) + 1;
-        if (max == node.getHeight())
-            return max;
-        else
-            return node.getKey();
-    }
-//---------------------------------------DELETE THIS-----------------------------------------
 
     /**
      * public interface IAVLNode
@@ -571,6 +635,10 @@ public class AVLTree {
 
     }
 
+    /**
+     * a class which inherits from {@link AVLNode} which implements {@link IAVLNode}.
+     * This class contains an extra parameter, size. this class is used in {@link RankTreeList}
+     */
     public class RankTreeNode extends AVLNode {
         private int size;
 
@@ -586,32 +654,62 @@ public class AVLTree {
         public void setSize(int size) {
             this.size = size;
         }
-
-        public void addNode() {
-            size++;
-        }
     }
 
 
 }
 
-interface updateNodeInt {
+/**
+ * A Functional interface used to update parameters of an {@link AVLTree.IAVLNode}
+ */
+interface updateNodeInterface {
     public boolean update(AVLTree.IAVLNode node);
 }
 
+/**
+ * A class which is used in the implementation of {@link TreeList}.
+ * The class extends {@link AVLTree}, and implements all of the nodes as {@link RankTreeNode}.
+ */
 class RankTreeList extends AVLTree {
 
+    /**
+     * <p>
+     * Inserts an item into the tree using {@link #baseInsert(IAVLNode, int)}
+     * Then updates the size of the tree and rebalances it using {@link #fixTreeInsert(IAVLNode, updateNodeInterface)}
+     * The function it uses to update the parameters of the nodes is {@link #updateSizeAndHeight(IAVLNode)}.
+     * </p>
+     * Time Complexity: O(log(n))
+     *
+     * @param i the position of the inserted item in the list
+     * @param k the key of the item
+     * @param s the value of the item (info)
+     *
+     * @return -1 if i<0 or i>n otherwise return 0.
+     */
     public int insert(int i, int k, String s) {
         IAVLNode nodeToAdd = new RankTreeNode(k, s);
         boolean inserted = baseInsert(nodeToAdd, i);
         if (!inserted)
             return -1;
         size++;
-//       return fixTreeInsert(nodeToAdd, this::updateSizeAndHeight);
-        fixTreeInsert(nodeToAdd, this::updateSizeAndHeight);
-        return 0;
+        return fixTreeInsert(nodeToAdd, this::updateSizeAndHeight);
+//        fixTreeInsert(nodeToAdd, this::updateSizeAndHeight);
+//        return 0;
     }
 
+
+    /**
+     * <p>
+     * Inserts the nodeToAdd into the tree according to the parameter i:
+     * if(i = sizeOfTree) -> max.right = node
+     * else we find node at rank(i+1) using {@link #select(int)}. if it doesn't have a left child, than make it node.
+     * otherwise make its successors right child node.
+     * </p>
+     * Time Complexity: O(log(n))
+     * @param nodeToAdd the node that is being added to the tree
+     * @param i the index of the node in the list the tree is representing
+     * @return true if node inserted, false otherwise
+     */
     protected boolean baseInsert(IAVLNode nodeToAdd, int i) {
         if (i < 0 || i > size)
             return false;
@@ -627,12 +725,12 @@ class RankTreeList extends AVLTree {
             nodeToAdd.setParent(runningNode);
             return true;
         } else {
-            IAVLNode successor = select(i + 1);
-            if (successor.getLeft() != null) {
-                successor.setLeft(nodeToAdd);
-                nodeToAdd.setParent(successor);
+            IAVLNode predecessor = select(i + 1);
+            if (predecessor.getLeft() == null) {
+                predecessor.setLeft(nodeToAdd);
+                nodeToAdd.setParent(predecessor);
             } else {
-                IAVLNode runningNode = successor.getLeft();
+                IAVLNode runningNode = predecessor.getLeft();
                 while (runningNode.getRight() != null)
                     runningNode = runningNode.getRight();
                 runningNode.setRight(nodeToAdd);
@@ -642,12 +740,29 @@ class RankTreeList extends AVLTree {
         return true;
     }
 
+    /**
+     * <p>
+     * A shell function used to call {@link #selectRec(IAVLNode, int)} if 1 <= k <= size
+     * </p>
+     * Time Complexity: O(log(n))
+     * @param k the rank that is being searched
+     * @return the node which's rank is k.
+     */
     private IAVLNode select(int k) {
         if (k > size || k < 1)
             return null;
         return selectRec(root, k);
     }
 
+    /**
+     * <p>
+     * A recursive function which finds the node at rank k.
+     * </p>
+     * Time Complexity: O(log(n))
+     * @param node the current node on the path to the correct one
+     * @param k the desired rank
+     * @return the node which's rank is k
+     */
     private IAVLNode selectRec(IAVLNode node, int k) {
         int rank = 1;
         if (node.getLeft() != null)
@@ -657,7 +772,7 @@ class RankTreeList extends AVLTree {
         else if (k < rank)
             return selectRec(node.getLeft(), k);
         else
-            return selectRec(node.getLeft(), k);
+            return selectRec(node.getRight(), k - rank);
     }
 
     private int getRank(IAVLNode node, int k) {
@@ -680,6 +795,8 @@ class RankTreeList extends AVLTree {
 
     public Item retrieve(int i) {
         IAVLNode node = select(i + 1);
+        if (node == null)
+            return null;
         return new Item(node.getKey(), node.getValue());
     }
 
@@ -689,9 +806,9 @@ class RankTreeList extends AVLTree {
         if (nodeToDelete == null)
             return -1;
         size--;
-//        return deleteNode(nodeToDelete, this::updateSizeAndHeight);
-        deleteNode(nodeToDelete, this::updateSizeAndHeight);
-        return 0;
+        return deleteNode(nodeToDelete, this::updateSizeAndHeight);
+//        deleteNode(nodeToDelete, this::updateSizeAndHeight);
+//        return 0;
     }
 
     private boolean updateSizeAndHeight(IAVLNode node) {
