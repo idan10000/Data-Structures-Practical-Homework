@@ -17,7 +17,7 @@ public class CircularList {
     public CircularList(int maxLen) {
         this.maxLen = maxLen;
         arr = new Item[maxLen];
-        //Len, start are defaultly set to 0.
+        //Len, start are both defaulted to 0.
     }
 
     /**
@@ -25,6 +25,9 @@ public class CircularList {
      * <p>
      * returns the item in the ith position if it exists in the list.
      * otherwise, returns null
+     * <p>
+     *
+     * Time Complexity: O(1)
      */
     public Item retrieve(int i) {
         if (i >= len || i < 0)
@@ -38,6 +41,9 @@ public class CircularList {
      * <p>
      * inserts an item to the ith position in list  with key k and  info s.
      * returns -1 if i<0 or i>n  or n=maxLen otherwise return 0.
+     * <p>
+     *
+     * Time Complexity: O(min{i+1, n-i+1})
      */
     public int insert(int i, int k, String s) {
         if (i > len || i < 0 || len == maxLen)
@@ -64,6 +70,9 @@ public class CircularList {
      * <p>
      * deletes an item in the ith posittion from the list.
      * returns -1 if i<0 or i>n-1 otherwise returns 0.
+     * <p>
+     *
+     * Time Complexity: O(min{i+1, n-i+1})
      */
     public int delete(int i) {
         if (i >= len || i < 0)
@@ -71,7 +80,7 @@ public class CircularList {
 
         if (i > len - i) {
             for (int j = start + i; j < start + len - 1; j++) {
-                arr[j % maxLen] = arr[(j+1) % maxLen];
+                arr[j % maxLen] = arr[(j + 1) % maxLen];
             }
         } else {
             for (int j = start + i; j > 0; j--) {
@@ -80,20 +89,9 @@ public class CircularList {
             start++;
 
         }
-        if(--len == 0)
+        if (--len == 0)
             start = -1;
         return 0;
-    }
-
-
-    @Override
-    public String toString() {
-        return "CircularList{" +
-                "arr=" + Arrays.toString(arr) +
-                ", maxLen=" + maxLen +
-                ", len=" + len +
-                ", start=" + start +
-                '}';
     }
 }
  
