@@ -109,13 +109,13 @@ public class AVLTree {
      * A recursive method that does an in-order tree run and adds the key of the current node into arr[i]
      * Used in {@link #keysToArray()}
      * </p>
-     * Time Complexity: O(log(n))
+     * Time Complexity: O(n)
      *
      * @param node the current node of the recursive function
      * @param arr  the array of keys
      * @param i    the current index in the array
      *
-     * @return return the new index where the next node is to be added
+     * @return the amount progressed
      */
     protected int InOrderKeyToArrayRec(IAVLNode node, int[] arr, int i) {
         if (node != null) {
@@ -134,7 +134,7 @@ public class AVLTree {
      * sorted by their respective keys,
      * or an empty array if the tree is empty.
      * <p>
-     * Time Complexity: O(log(n))
+     * Time Complexity: O(n)
      */
     public String[] infoToArray() {
         String[] arr = new String[size];
@@ -148,13 +148,13 @@ public class AVLTree {
      * tree run and adds the value of the current node into arr[i]
      * Used in {@link #infoToArray()} ()}
      * </p>
-     * Time Complexity: O(log(n))
+     * Time Complexity: O(n)
      *
      * @param node the current node of the recursive function
      * @param arr  the array of values
      * @param i    the current index in the array
      *
-     * @return return the new index where the next node is to be added
+     * @return the amount progressed
      */
     private int InOrderInfoToArrayRec(IAVLNode node, String[] arr, int i) {
         if (node != null) {
@@ -261,7 +261,6 @@ public class AVLTree {
      * @return true if the node was added to the tree, false if the node already existed in the tree.
      */
     private boolean baseInsert(IAVLNode nodeToAdd) { // Support function
-        IAVLNode backNode = null, frontNode = root;
 
         //updating max and min
         if (max == null || max.getKey() < nodeToAdd.getKey())
@@ -270,6 +269,7 @@ public class AVLTree {
             min = nodeToAdd;
 
         // Inserting the node
+        IAVLNode backNode = null, frontNode = root;
         while (frontNode != null) {
             if (frontNode.getKey() == nodeToAdd.getKey())
                 return false;
@@ -349,7 +349,7 @@ public class AVLTree {
      * Time complexity: O(1)
      *
      * @param node    the BF criminal
-     * @param BF      the Beneficial factor of the node (node.left.height - node.right.height)
+     * @param BF      the Balance factor of the node (node.left.height - node.right.height)
      * @param updater a functional interface which updates the parameters of the node after the rotation
      *
      * @return the number of rotations done
