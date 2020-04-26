@@ -148,7 +148,7 @@ public class Tes {
         for (int h = 0; h < 100; h++) {
             TreeList lst = new TreeList();
 
-            if (h % 2 ==0) {
+            if (h % 2 == 0) {
                 for (int j = 0; j < 5000; j++) {
                     lst.insert(0, j, "" + j);
                 }
@@ -158,92 +158,99 @@ public class Tes {
                 }
             }
         }
-        for (int i = 1; i < 21; i++) {
+        Random rand = new Random();
+        for (int i = 1; i < 11; i++) {
+            int index = 0;
             double circInsertTime = 0, treeInsertTime = 0;
             int rotations;
             double leftTreeRotations = 0, rightTreeRotations = 0;
             long startTime = 0, endTime = 0;
-            int listLength = 5000;
-            int averageN = 100;
+            int listLength = 10000;
+            int averageN = 10;
             for (int h = 0; h < averageN; h++) {
                 CircularList circularList = new CircularList(i * listLength * 2);
-                
-                if (h % 2 ==0) {
+
+//                if (h % 2 ==0) {
+                for (int j = 0; j < listLength * i; j++) {
+
                     startTime = System.nanoTime();
-                    for (int j = 0; j < listLength * i; j++) {
-                        circularList.insert(0, j, "" + j);
-                    }
+                    circularList.insert(index, j, "" + j);
                     endTime = System.nanoTime();
-                } else {
-                    startTime = System.nanoTime();
-                    for (int j = 0; j < listLength * i; j++) {
-                        circularList.insert(j, j, "" + j);
-                    }
-                    endTime = System.nanoTime();
+                    index = rand.nextInt(j+1);
+                    circInsertTime += (endTime - startTime);
                 }
+//                } else {
+//                    for (int j = 0; j < listLength * i; j++) {
+//                        startTime = System.nanoTime();
+//                        circularList.insert(j, j, "" + j);
+//                        endTime = System.nanoTime();
+//                        circInsertTime += (endTime - startTime);
+//                    }
+//                }
                 //System.out.println(circularList);
-                circInsertTime += (endTime - startTime);
                 //System.out.println(String.format("%e",(endTime - startTime)* Math.pow(10, -9)));
             }
-            
-            circInsertTime = (circInsertTime / ((double)averageN*i*listLength)) * Math.pow(10, -9);
 
+            circInsertTime = (circInsertTime / ((double) averageN * i * listLength)) * Math.pow(10, -9);
+            index = 0;
             for (int h = 0; h < averageN; h++) {
                 TreeList treeList = new TreeList();
-                if (h % 2 ==0) {
+//                if (h % 2 ==0) {
+                for (int j = 0; j < listLength * i; j++) {
                     startTime = System.nanoTime();
-                    for (int j = 0; j < listLength * i; j++) {
-                        rotations = treeList.insert(0, j, "" + j);
-                        switch (rotations) {
-                            case 0:
-                                break;
-                            case 1:
-                                rightTreeRotations++;
-                                break;
-                            case -1:
-                                leftTreeRotations++;
-                                break;
-                            case 3:
-                                leftTreeRotations++;
-                                rightTreeRotations++;
-                                break;
-                        }
-                    }
+                    rotations = treeList.insert(index, j, "" + j);
                     endTime = System.nanoTime();
-                } else {
-                    startTime = System.nanoTime();
-                    for (int j = 0; j < listLength * i; j++) {
-                        rotations = treeList.insert(j, j, "" + j);
-                        switch (rotations) {
-                            case 0:
-                                break;
-                            case 1:
-                                rightTreeRotations++;
-                                break;
-                            case -1:
-                                leftTreeRotations++;
-                                break;
-                            case 3:
-                                leftTreeRotations++;
-                                rightTreeRotations++;
-                                break;
-                        }
+                    index = rand.nextInt(j+1);
+                    treeInsertTime += (endTime - startTime);
+                    switch (rotations) {
+                        case 0:
+                            break;
+                        case 1:
+                            rightTreeRotations++;
+                            break;
+                        case -1:
+                            leftTreeRotations++;
+                            break;
+                        case 3:
+                            leftTreeRotations++;
+                            rightTreeRotations++;
+                            break;
                     }
-                    endTime = System.nanoTime();
                 }
+//                } else {
+//                    for (int j = 0; j < listLength * i; j++) {
+//                        startTime = System.nanoTime();
+//                        rotations = treeList.insert(j, j, "" + j);
+//                        endTime = System.nanoTime();
+//                        treeInsertTime += (endTime - startTime);
+//                        switch (rotations) {
+//                            case 0:
+//                                break;
+//                            case 1:
+//                                rightTreeRotations++;
+//                                break;
+//                            case -1:
+//                                leftTreeRotations++;
+//                                break;
+//                            case 3:
+//                                leftTreeRotations++;
+//                                rightTreeRotations++;
+//                                break;
+//                        }
+//                    }
+//                }
                 //System.out.println(String.format("%e",(endTime - startTime)* Math.pow(10, -9)));
-                treeInsertTime += (endTime - startTime);
             }
-            if(i % 2 == 0) {
-                treeInsertTime = (treeInsertTime / ((double) averageN * i * listLength)) * Math.pow(10, -9);
-                leftTreeRotations /= ((double) averageN * i * listLength);
-                rightTreeRotations /= ((double) averageN * i * listLength);
+//            if(i % 1 == 0) {
+            treeInsertTime = (treeInsertTime / ((double) averageN * i * listLength)) * Math.pow(10, -9);
+            leftTreeRotations /= ((double) averageN * i * listLength);
+            rightTreeRotations /= ((double) averageN * i * listLength);
 
-                System.out.println("Results for " + i * listLength + ":");
-                System.out.println(String.format("Circular List: Avg. time: %e", circInsertTime));
-                System.out.println(String.format("Tree List: Avg. time: %e\t Left rotations: %e \t Right rotations: %e", treeInsertTime, leftTreeRotations, rightTreeRotations));
-                System.out.println();
-            }
+            System.out.println("Results for " + i * listLength + ":");
+            System.out.println(String.format("%e", circInsertTime));
+            System.out.println(String.format("%e\nLeft rotations: %e \t Right rotations: %e", treeInsertTime, leftTreeRotations, rightTreeRotations));
+            System.out.println();
+//            }
         }
     }
 }

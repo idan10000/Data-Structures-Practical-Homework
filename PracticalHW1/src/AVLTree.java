@@ -239,7 +239,7 @@ public class AVLTree {
                 parent = parent.getParent();
                 continue;
             } else {
-                rotations = doRotation(parent, BF, this::updateHeight);
+                rotations = doRotation(parent, BF, updater);
                 break;
             }
         }

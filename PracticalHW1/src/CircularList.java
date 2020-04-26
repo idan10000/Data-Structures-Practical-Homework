@@ -24,7 +24,7 @@ public class CircularList {
      * returns the item in the ith position if it exists in the list.
      * otherwise, returns null
      * <p>
-     *
+     * <p>
      * Time Complexity: O(1)
      */
     public Item retrieve(int i) {
@@ -40,7 +40,7 @@ public class CircularList {
      * inserts an item to the ith position in list  with key k and  info s.
      * returns -1 if i<0 or i>n  or n=maxLen otherwise return 0.
      * <p>
-     *
+     * <p>
      * Time Complexity: O(min{i+1, n-i+1})
      */
     public int insert(int i, int k, String s) {
@@ -49,7 +49,7 @@ public class CircularList {
         Item newItem = new Item(k, s);
         if (i < len - i) {
             for (int j = start; j < start + i; j++) {
-                arr[(j - 1) % maxLen] = arr[j % maxLen];
+                arr[(j - 1 + maxLen) % maxLen] = arr[j % maxLen];
             }
             start = (maxLen + start - 1) % maxLen;
         } else {
@@ -69,7 +69,7 @@ public class CircularList {
      * deletes an item in the ith posittion from the list.
      * returns -1 if i<0 or i>n-1 otherwise returns 0.
      * <p>
-     *
+     * <p>
      * Time Complexity: O(min{i+1, n-i+1})
      */
     public int delete(int i) {
