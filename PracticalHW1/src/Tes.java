@@ -1,5 +1,9 @@
 import java.util.*;
 
+/**
+ * @author pinto - 322522111
+ * @author rashtiyarden - 315384578
+ */
 public class Tes {
     public static void main(String[] args) {
     }

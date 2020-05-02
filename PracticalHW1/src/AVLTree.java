@@ -1,6 +1,7 @@
 
 /**
- * @author Idan Pinto, Yarden Rashti
+ * @author pinto - 322522111
+ * @author rashtiyarden - 315384578
  * AVLTree
  * <p>
  * An implementation of a AVL Tree with

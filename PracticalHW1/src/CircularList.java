@@ -1,4 +1,6 @@
 /**
+ * @author pinto - 322522111
+ * @author rashtiyarden - 315384578
  * Circular list
  * <p>
  * An implementation of a circular list with  key and info
