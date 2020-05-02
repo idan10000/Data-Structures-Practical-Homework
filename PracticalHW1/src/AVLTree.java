@@ -243,9 +243,11 @@ public class AVLTree {
                 break;
             }
         }
-        while (parent != null) {
-            updater.update(parent);
-            parent = parent.getParent();
+        if(node instanceof RankTreeNode) {
+            while (parent != null) {
+                updater.update(parent);
+                parent = parent.getParent();
+            }
         }
         return rotations;
     }
@@ -399,7 +401,7 @@ public class AVLTree {
         node.setParent(y);
         updater.update(node);
         updater.update(y);
-        return -1;
+        return 1;
     }
 
     /**
@@ -417,7 +419,7 @@ public class AVLTree {
     private int rotateLR(IAVLNode node, updateNodeInterface updater) {
         rotateLL(node.getLeft(), updater);
         rotateRR(node, updater);
-        return 3;
+        return 2;
     }
 
     /**
@@ -468,7 +470,7 @@ public class AVLTree {
     private int rotateRL(IAVLNode node, updateNodeInterface updater) {
         rotateRR(node.getRight(), updater);
         rotateLL(node, updater);
-        return 3;
+        return 2;
     }
 
     /**
@@ -778,9 +780,8 @@ class RankTreeList extends AVLTree {
         if (!inserted)
             return -1;
         size++;
-        return fixTreeInsert(nodeToAdd, this::updateSizeAndHeight);
-//        fixTreeInsert(nodeToAdd, this::updateSizeAndHeight);
-//        return 0;
+        fixTreeInsert(nodeToAdd, this::updateSizeAndHeight);
+        return 0;
     }
 
     /**
@@ -812,12 +813,12 @@ class RankTreeList extends AVLTree {
             nodeToAdd.setParent(runningNode);
             return true;
         } else {
-            IAVLNode predecessor = select(i + 1);
-            if (predecessor.getLeft() == null) {
-                predecessor.setLeft(nodeToAdd);
-                nodeToAdd.setParent(predecessor);
+            IAVLNode successor = select(i + 1);
+            if (successor.getLeft() == null) {
+                successor.setLeft(nodeToAdd);
+                nodeToAdd.setParent(successor);
             } else {
-                IAVLNode runningNode = predecessor.getLeft();
+                IAVLNode runningNode = successor.getLeft();
                 while (runningNode.getRight() != null)
                     runningNode = runningNode.getRight();
                 runningNode.setRight(nodeToAdd);
@@ -845,7 +846,7 @@ class RankTreeList extends AVLTree {
 
     /**
      * <p>
-     * A recursive function which finds the node at rank k.
+     * A recursive function which finds the node at rank k using the algorithm learnt in class.
      * </p>
      * Time Complexity: O(log(n))
      *
@@ -901,9 +902,8 @@ class RankTreeList extends AVLTree {
         if (nodeToDelete == null)
             return -1;
         size--;
-        return deleteNode(nodeToDelete, this::updateSizeAndHeight);
-//        deleteNode(nodeToDelete, this::updateSizeAndHeight);
-//        return 0;
+        deleteNode(nodeToDelete, this::updateSizeAndHeight);
+        return 0;
     }
 
     /**
@@ -918,7 +918,7 @@ class RankTreeList extends AVLTree {
      *
      * @param node the node who's height and size needs to be updated. is an instance of {@link RankTreeNode}
      *
-     * @return true if height changed, false otherwise
+     * @return always true, as we want to update the size on the entire path
      */
     private boolean updateSizeAndHeight(IAVLNode node) {
         // update size
@@ -931,7 +931,8 @@ class RankTreeList extends AVLTree {
             rightSize = rightNode.getSize();
         ((RankTreeNode) node).setSize(leftSize + rightSize + 1);
         // update height and return if changed the height
-        return updateHeight(node);
+        updateHeight(node);
+        return true;
     }
 }
 

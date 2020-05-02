@@ -1,10 +1,7 @@
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Random;
+import java.util.*;
 
 public class Tes {
     public static void main(String[] args) {
-        firstTest();
     }
 
     public static Integer[] array;
@@ -110,39 +107,15 @@ public class Tes {
 
     private static void TreeListTester() {
         TreeList lst = new TreeList();
-        lst.insert(0, 4, "4");
-        lst.insert(1, 5, "4");
-        lst.insert(2, 6, "4");
-        lst.insert(3, 7, "4");
-        lst.insert(0, 8, "4");
-        lst.insert(5, 2, "4");
-        lst.insert(3, 9, "4");
-        lst.printList();
-
-        System.out.println(lst.retrieve(3));
-        System.out.println(lst.retrieve(0));
-        System.out.println(lst.retrieve(9));
-        System.out.println(lst.retrieve(6));
-
-        System.out.println();
-
-        System.out.println(lst.delete(0));
-        System.out.println(lst.delete(3));
-        System.out.println(lst.delete(9));
-        System.out.println(lst.delete(4));
-
-        System.out.println();
-
-        System.out.println(lst.insert(0, 11, ""));
-
-        System.out.println();
-
-        System.out.println(lst.retrieve(3));
-        System.out.println(lst.retrieve(0));
-        System.out.println(lst.retrieve(9));
-        System.out.println(lst.retrieve(4));
+        for (int i = 0; i < 10; i++) {
+            lst.insert(i,i,"");
+        }
+        lst.delete(4);
+        lst.delete(2);
+        lst.delete(7);
         lst.printList();
     }
+
 
     private static void firstTest() {
         for (int h = 0; h < 100; h++) {
@@ -159,26 +132,28 @@ public class Tes {
             }
         }
         Random rand = new Random();
-        for (int i = 1; i < 11; i++) {
+        for (int i = 12; i > 0; i--) {
             int index = 0;
             double circInsertTime = 0, treeInsertTime = 0;
             int rotations;
             double leftTreeRotations = 0, rightTreeRotations = 0;
             long startTime = 0, endTime = 0;
             int listLength = 10000;
-            int averageN = 10;
+            int averageN = 50;
+            System.out.println("Results for " + i * listLength + ":");
             for (int h = 0; h < averageN; h++) {
+
                 CircularList circularList = new CircularList(i * listLength * 2);
 
 //                if (h % 2 ==0) {
-                for (int j = 0; j < listLength * i; j++) {
-
-                    startTime = System.nanoTime();
-                    circularList.insert(index, j, "" + j);
-                    endTime = System.nanoTime();
-                    index = rand.nextInt(j+1);
-                    circInsertTime += (endTime - startTime);
-                }
+//                for (int j = 0; j < listLength * i; j++) {
+//
+//                    startTime = System.nanoTime();
+//                    circularList.insert(index, j, "" + j);
+//                    endTime = System.nanoTime();
+//                    index = rand.nextInt(j+1);
+//                    circInsertTime += (endTime - startTime);
+//                }
 //                } else {
 //                    for (int j = 0; j < listLength * i; j++) {
 //                        startTime = System.nanoTime();
@@ -191,7 +166,7 @@ public class Tes {
                 //System.out.println(String.format("%e",(endTime - startTime)* Math.pow(10, -9)));
             }
 
-            circInsertTime = (circInsertTime / ((double) averageN * i * listLength)) * Math.pow(10, -9);
+//            circInsertTime = (circInsertTime / ((double) averageN * i * listLength)) * Math.pow(10, -9);
             index = 0;
             for (int h = 0; h < averageN; h++) {
                 TreeList treeList = new TreeList();
@@ -200,7 +175,7 @@ public class Tes {
                     startTime = System.nanoTime();
                     rotations = treeList.insert(index, j, "" + j);
                     endTime = System.nanoTime();
-                    index = rand.nextInt(j+1);
+                    index = rand.nextInt(j + 1);
                     treeInsertTime += (endTime - startTime);
                     switch (rotations) {
                         case 0:
@@ -246,8 +221,7 @@ public class Tes {
             leftTreeRotations /= ((double) averageN * i * listLength);
             rightTreeRotations /= ((double) averageN * i * listLength);
 
-            System.out.println("Results for " + i * listLength + ":");
-            System.out.println(String.format("%e", circInsertTime));
+//            System.out.println(String.format("%e", circInsertTime));
             System.out.println(String.format("%e\nLeft rotations: %e \t Right rotations: %e", treeInsertTime, leftTreeRotations, rightTreeRotations));
             System.out.println();
 //            }

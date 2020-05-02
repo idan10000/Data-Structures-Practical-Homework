@@ -47,4 +47,8 @@ public class TreeList {
         System.out.println(Arrays.toString(tree.keysToArray()));
     }
 
+    public int getTreeHeight(){
+        return tree.getRoot().getHeight();
+    }
+
 }
