@@ -45,12 +45,4 @@ public class TreeList {
         return tree.delete(i);
     }
 
-    public void printList(){
-        System.out.println(Arrays.toString(tree.keysToArray()));
-    }
-
-    public int getTreeHeight(){
-        return tree.getRoot().getHeight();
-    }
-
 }
