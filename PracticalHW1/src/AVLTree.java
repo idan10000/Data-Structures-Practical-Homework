@@ -40,7 +40,6 @@ public class AVLTree {
     }
 
     /**
-     * public String search(int k)
      * <p>
      * returns the node with key k if it exists in the tree
      * otherwise, returns null
@@ -97,7 +96,7 @@ public class AVLTree {
      * Returns a sorted array which contains all keys in the tree,
      * or an empty array if the tree is empty.
      * <p>
-     * Time Complexity: O(log(n))
+     * Time Complexity: O(n)
      */
     public int[] keysToArray() {
         int[] arr = new int[size];
@@ -520,9 +519,7 @@ public class AVLTree {
     /**
      * <p>
      * A method which deletes a node from the tree, and re-balances it using the standard algorithm learnt in class.
-     * The method starts re-balancing the tree from a different node considering if the the successor
-     * successor of the node is it's right child then we fix the tree from it. otherwise we fix it from
-     * the parent of the physically deleted node (the parent of the successor).
+     * The method starts re-balancing the tree from the parent of the physically deleted node
      * <p>
      * This method is used in {@link AVLTree#delete(int)} and {@link RankTreeList#delete(int)} to delete a node from the tree.
      * </p>
@@ -678,9 +675,7 @@ public class AVLTree {
             this.value = value;
         }
 
-        /*
-        All getters and setters run at O(1) time and are implemented defaultly (return value for getter, change it for setter)
-         */
+//        All getters and setters run at O(1) time and are implemented defaultly (return value for getter, change it for setter)
 
         public int getKey() {
             return key;
@@ -731,6 +726,13 @@ public class AVLTree {
     public class RankTreeNode extends AVLNode {
         private int size;
 
+//        All getters and setters run at O(1) time and are implemented defaultly (return value for getter, change it for setter)
+
+        /**
+         * Initialises the RankTreeNode. calls to the constructor of AVLNode, and initialises the size field to be 1.
+         * @param key the key of the node
+         * @param value the value of the node
+         */
         public RankTreeNode(int key, String value) {
             super(key, value);
             size = 1;

@@ -13,7 +13,13 @@ public class CircularList {
     private int len;
     private int start;
 
-
+    /**
+     * <p>
+     * Initialises the {@link CircularList} fields.
+     * </p>
+     * Time Complexity: O(maxLen)
+     * @param maxLen the maximum length the list can hold.
+     */
     public CircularList(int maxLen) {
         this.maxLen = maxLen;
         arr = new Item[maxLen];

@@ -117,7 +117,6 @@ public class Tes {
         lst.delete(4);
         lst.delete(2);
         lst.delete(7);
-        lst.printList();
     }
 
 
