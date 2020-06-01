@@ -9,7 +9,7 @@ public class Item {
 
     /**
      * <p>Initializes the item fields.</p>
-     * Time Complexity: O(log(n))
+     * Time Complexity: O(1)
      *
      * @param key  the key of the time
      * @param info the "value" of the item
