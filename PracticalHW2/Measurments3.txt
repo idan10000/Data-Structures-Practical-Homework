@@ -1,0 +1,286 @@
+"C:\Program Files\Java\jdk1.8.0_241\bin\java.exe" "-javaagent:C:\Program Files\JetBrains\IntelliJ IDEA 2019.3.3\lib\idea_rt.jar=54678:C:\Program Files\JetBrains\IntelliJ IDEA 2019.3.3\bin" -Dfile.encoding=UTF-8 -classpath "C:\Program Files\Java\jdk1.8.0_241\jre\lib\charsets.jar;C:\Program Files\Java\jdk1.8.0_241\jre\lib\deploy.jar;C:\Program Files\Java\jdk1.8.0_241\jre\lib\ext\access-bridge-64.jar;C:\Program Files\Java\jdk1.8.0_241\jre\lib\ext\cldrdata.jar;C:\Program Files\Java\jdk1.8.0_241\jre\lib\ext\dnsns.jar;C:\Program Files\Java\jdk1.8.0_241\jre\lib\ext\jaccess.jar;C:\Program Files\Java\jdk1.8.0_241\jre\lib\ext\jfxrt.jar;C:\Program Files\Java\jdk1.8.0_241\jre\lib\ext\localedata.jar;C:\Program Files\Java\jdk1.8.0_241\jre\lib\ext\nashorn.jar;C:\Program Files\Java\jdk1.8.0_241\jre\lib\ext\sunec.jar;C:\Program Files\Java\jdk1.8.0_241\jre\lib\ext\sunjce_provider.jar;C:\Program Files\Java\jdk1.8.0_241\jre\lib\ext\sunmscapi.jar;C:\Program Files\Java\jdk1.8.0_241\jre\lib\ext\sunpkcs11.jar;C:\Program Files\Java\jdk1.8.0_241\jre\lib\ext\zipfs.jar;C:\Program Files\Java\jdk1.8.0_241\jre\lib\javaws.jar;C:\Program Files\Java\jdk1.8.0_241\jre\lib\jce.jar;C:\Program Files\Java\jdk1.8.0_241\jre\lib\jfr.jar;C:\Program Files\Java\jdk1.8.0_241\jre\lib\jfxswt.jar;C:\Program Files\Java\jdk1.8.0_241\jre\lib\jsse.jar;C:\Program Files\Java\jdk1.8.0_241\jre\lib\management-agent.jar;C:\Program Files\Java\jdk1.8.0_241\jre\lib\plugin.jar;C:\Program Files\Java\jdk1.8.0_241\jre\lib\resources.jar;C:\Program Files\Java\jdk1.8.0_241\jre\lib\rt.jar;C:\Users\idanp\OneDrive\Documents\University\Data Structures\Homework\Practical\Data-Structures-Practical-Homework\PracticalHW2\out\production\PracticalHW2" measurments
+0
+Table full: 6568
+Table full: 6570
+
+1
+Table full: 6570
+
+2
+
+3
+Table full: 6570
+
+4
+Table full: 6570
+
+5
+Table full: 6570
+
+6
+Table full: 6568
+
+7
+Table full: 6570
+
+8
+
+9
+Table full: 6569
+
+10
+Table full: 6570
+
+11
+Table full: 6570
+
+12
+Table full: 6570
+
+13
+Table full: 6570
+
+14
+Table full: 6569
+
+15
+
+16
+Table full: 6566
+
+17
+Table full: 6568
+
+18
+Table full: 6568
+Table full: 6570
+
+19
+
+20
+Table full: 6570
+
+21
+
+22
+Table full: 6569
+
+23
+Table full: 6569
+Table full: 6570
+
+24
+Table full: 6570
+
+25
+Table full: 6568
+Table full: 6569
+
+26
+Table full: 6564
+
+27
+Table full: 6564
+
+28
+Table full: 6570
+
+29
+Table full: 6570
+
+30
+Table full: 6570
+
+31
+
+32
+Table full: 6570
+
+33
+Table full: 6568
+
+34
+Table full: 6570
+
+35
+
+36
+Table full: 6569
+
+37
+Table full: 6570
+
+38
+Table full: 6568
+
+39
+Table full: 6569
+
+40
+
+41
+
+42
+
+43
+Table full: 6567
+Table full: 6569
+
+44
+Table full: 6569
+
+45
+
+46
+Table full: 6569
+Table full: 6570
+
+47
+Table full: 6569
+
+48
+Table full: 6569
+Table full: 6570
+
+49
+Table full: 6569
+
+50
+
+51
+
+52
+Table full: 6568
+Table full: 6569
+
+53
+Table full: 6569
+
+54
+Table full: 6568
+Table full: 6569
+
+55
+Table full: 6570
+
+56
+Table full: 6569
+
+57
+Table full: 6569
+
+58
+
+59
+
+60
+
+61
+
+62
+Table full: 6570
+
+63
+Table full: 6569
+Table full: 6570
+
+64
+Table full: 6570
+
+65
+
+66
+Table full: 6567
+
+67
+
+68
+
+69
+Table full: 6564
+
+70
+Table full: 6570
+
+71
+Table full: 6570
+
+72
+Table full: 6567
+
+73
+
+74
+Table full: 6567
+
+75
+Table full: 6570
+
+76
+Table full: 6570
+
+77
+Table full: 6570
+
+78
+
+79
+
+80
+Table full: 6570
+
+81
+Table full: 6568
+Table full: 6570
+
+82
+
+83
+Table full: 6569
+
+84
+Table full: 6570
+
+85
+Table full: 6570
+
+86
+
+87
+Table full: 6570
+
+88
+Table full: 6567
+
+89
+Table full: 6569
+
+90
+Table full: 6568
+
+91
+Table full: 6569
+
+92
+
+93
+Table full: 6569
+
+94
+Table full: 6567
+
+95
+Table full: 6570
+
+96
+Table full: 6568
+
+97
+
+98
+Table full: 6570
+
+99
+
+
+Process finished with exit code 0

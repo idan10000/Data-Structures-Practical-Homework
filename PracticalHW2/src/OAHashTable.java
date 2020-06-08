@@ -1,9 +1,10 @@
+import java.util.Arrays;
 
 public abstract class OAHashTable implements IHashTable {
 
     private HashTableElement[] table;
     private int curElements;
-    private final HashTableElement deleted = new HashTableElement(0, 0);
+    private final HashTableElement deleted = new HashTableElement(-1, -1);
 
     public OAHashTable(int m) {
         this.table = new HashTableElement[m];
@@ -29,15 +30,22 @@ public abstract class OAHashTable implements IHashTable {
             throw new TableIsFullException(hte);
         int indexToInsert = -1;
         for (int i = 0; i < table.length; i++) {
-            HashTableElement element = table[Hash(hte.GetKey(), i)];
-            if ((element == deleted || element == null) && indexToInsert == -1)
-                indexToInsert = i;
-            else if (element != null && element.GetKey() == hte.GetKey()) {
+            int hashedIndex = Hash(hte.GetKey(), i);
+            HashTableElement element = table[hashedIndex];
+            if (element == null) {
+                if (indexToInsert == -1)
+                    indexToInsert = hashedIndex;
+                break;
+            }
+            if ((element == deleted) && indexToInsert == -1)
+                indexToInsert = hashedIndex;
+            else if (element.GetKey() == hte.GetKey()) {
                 indexToInsert = -2;
                 break;
             }
         }
-
+        if (indexToInsert == -1)
+            throw new TableIsFullException(hte);
         if (indexToInsert == -2)
             throw new KeyAlreadyExistsException(hte);
         curElements++;
@@ -47,11 +55,12 @@ public abstract class OAHashTable implements IHashTable {
     @Override
     public void Delete(long key) throws KeyDoesntExistException {
         for (int i = 0; i < table.length; i++) {
-            HashTableElement element = table[Hash(key, i)];
-            if(element == null)
+            int hashedIndex = Hash(key, i);
+            HashTableElement element = table[hashedIndex];
+            if (element == null)
                 throw new KeyDoesntExistException(key);
-            else if(element.GetKey() == key) {
-                table[i] = deleted;
+            else if (element.GetKey() == key && element != deleted) {
+                table[hashedIndex] = deleted;
                 curElements--;
                 break;
             }
@@ -65,4 +74,12 @@ public abstract class OAHashTable implements IHashTable {
      * @return the index into the hash table to place the key x
      */
     public abstract int Hash(long x, int i);
+
+    @Override
+    public String toString() {
+        return "OAHashTable{" +
+                "table=" + Arrays.toString(table) +
+                "\ncurElements=" + curElements +
+                '}';
+    }
 }

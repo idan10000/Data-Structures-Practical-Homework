@@ -14,12 +14,12 @@ public class ModHash {
 
 	public static ModHash GetFunc(int m, long p){
 		long a,b;
-		a = ThreadLocalRandom.current().nextLong(1,p);
-		b = ThreadLocalRandom.current().nextLong(0,p);
+		a = 1 + (long) (Math.random() * (p - 1));
+		b = (long) (Math.random() * p);
 		return new ModHash(a,b,p,m);
 	}
 	
 	public int Hash(long key) {
-		return (int)((a * key + b) % p) % m;
+		return (int)Math.floorMod((Math.floorMod(a * key + b, p)),m);
 	}
 }

@@ -10,10 +10,9 @@ public class AQPHashTable extends OAHashTable {
 		hash = ModHash.GetFunc(m, p);
 		this.m = m;
 	}
-
 	
 	@Override
 	public int Hash(long x, int i) {
-		return (hash.Hash(x) + (int)Math.pow(-1,i)*i*i) % m;
+		return i % 2 == 0 ? ((hash.Hash(x) + i*i) % m) : Math.floorMod(hash.Hash(x) - (i * i), m);
 	}
 }
