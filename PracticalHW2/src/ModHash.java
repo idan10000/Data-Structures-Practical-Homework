@@ -1,9 +1,7 @@
-import java.util.concurrent.ThreadLocalRandom;
-
 public class ModHash {
 
-	private long a,b, p;
-	private int m;
+	private final long a,b, p;
+	private final int m;
 
 	public ModHash(long a, long b, long p, int m) {
 		this.a = a;
