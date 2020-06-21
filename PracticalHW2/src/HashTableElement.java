@@ -11,12 +11,4 @@ public class HashTableElement{
 	public long GetKey() { return this.key;}
 	
 	public long GetValue() { return this.value;}
-
-	@Override
-	public String toString() {
-		return "HashTableElement{" +
-				"key=" + key +
-				", value=" + value +
-				'}';
-	}
 }
