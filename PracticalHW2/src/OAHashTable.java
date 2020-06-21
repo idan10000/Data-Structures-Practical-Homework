@@ -55,7 +55,7 @@ public abstract class OAHashTable implements IHashTable {
 
     @Override
     public void Delete(long key) throws KeyDoesntExistException {
-        for (int i = 0; i < table.length; i++) { // Attempt m (table size) probes to find and delete teh element
+        for (int i = 0; i < table.length; i++) { // Attempt m (table size) probes to find and delete the element
             int hashedIndex = Hash(key, i);
             HashTableElement element = table[hashedIndex];
             if (element == null) // If found a null slot, the key searched will not be in any of the future probes, thus it is not in the table
